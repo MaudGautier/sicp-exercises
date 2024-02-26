@@ -2,10 +2,17 @@
 ;It would be more complicated otherwise 😁
 
 ;---Procedures---
+;For first method
 (define (perimeter-rect rectangle)
   (* 2 (+ (width-rect rectangle) (height-rect rectangle))))
 (define (area-rect rectangle)
   (* (width-rect rectangle) (height-rect rectangle)))
+
+;For second method
+(define (perimeter-rect-2 rectangle)
+  (* 2 (+ (width-rect-2 rectangle) (height-rect-2 rectangle))))
+(define (area-rect-2 rectangle)
+  (* (width-rect-2 rectangle) (height-rect-2 rectangle)))
 
 ;---Points---
 ;Constructor
@@ -17,7 +24,7 @@
 (define (y-point point)
   (cdr point))
 
-;---Rectangles---
+;---Rectangles Method 1---
 ; Assumes the following:
 ; p1
 ; |
@@ -45,3 +52,23 @@
 (width-rect rectangle1);10
 (perimeter-rect rectangle1);26
 (area-rect rectangle1);30
+
+
+;---Rectangles Method 2---
+; Assumes the following:
+; |
+; | height
+; |       width
+; --------------------
+(define (make-rectangle-2 height width origin)
+  (cons (cons (x-point origin) (y-point origin)) (cons height width)))
+(define (height-rect-2 rectangle) (car (cdr rectangle)))
+(define (width-rect-2 rectangle) (cdr (cdr rectangle)))
+
+
+(define rectangle2 (make-rectangle-2 3 10 (make-point 0 0)))
+(height-rect-2 rectangle2);3
+(width-rect-2 rectangle2);10
+(perimeter-rect-2 rectangle2);26
+(area-rect-2 rectangle2);30
+
