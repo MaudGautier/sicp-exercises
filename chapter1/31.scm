@@ -8,3 +8,12 @@
 (product square 1 1 inc);1
 (product square 1 2 inc);4
 (product square 1 3 inc);36
+
+(define (factorial n)
+  (product (lambda (x) x) 1 n inc))
+
+(factorial 1);1
+(factorial 2);2
+(factorial 3);6
+(factorial 4);24
+(factorial 5);120
