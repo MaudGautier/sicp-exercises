@@ -22,15 +22,24 @@
 
 (define (sum? x) (and (pair? x) (eq? (car x) '+)))
 
+
+(define (accumulate proc initial sequence)
+  (if (null? sequence)
+    initial
+    (proc (car sequence)
+      (accumulate proc initial (cdr sequence)))))
+
 (define (addend s) (cadr s))
 
-(define (augend s) (caddr s))
+;(define (augend s) (caddr s))
+(define (augend s) (accumulate make-sum 0 (cddr s)))
 
 (define (product? x) (and (pair? x) (eq? (car x) '*)))
 
 (define (multiplier p) (cadr p))
 
-(define (multiplicand p) (caddr p))
+;(define (multiplicand p) (caddr p))
+(define (multiplicand p) (accumulate make-product 1 (cddr p)))
 
 ;Exponentiation
 (define (exponentiation? x) (and (pair? x) (eq? (car x) '**)))
@@ -86,9 +95,9 @@
 
 ;Testing
 (deriv '(+ x 3) 'x) ; Expected: 1
+(deriv '(+ x 3 y) 'x) ; Expected: 1
+(deriv '(+ x 3 x) 'x) ; Expected: 2
 (deriv '(* x y) 'x) ; Expected: y
-(deriv '(* (* x y) (+ x 3)) 'x) ; Expected: (+ (* x y) (* y (+ x 3)))
-(deriv '(** u 3) 'x) ; Expected: 0
-(deriv '(** (* x y) 3) 'x) ; Expected: (* 3 (** (* x y) 2) y)
-(deriv '(** (* x y) 1) 'x) ; Expected: (* 1 (** (* x y) 0) y) ---> y
+(deriv '(* x y y) 'x) ; Expected: (* y y)
+(deriv '(* x y (+ x 3)) 'x) ; Expected: (+ (* x y) (* y (+ x 3)))
 
