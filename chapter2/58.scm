@@ -18,17 +18,25 @@
     ((and (number? m1) (number? m2)) (* m1 m2))
     (else (list m1 '* m2))))
 
+(define (cleaner sequence)
+  (if (null? (cdr sequence))
+    (car sequence)
+    sequence))
+
+
 (define (sum? x) (and (pair? x) (eq? (cadr x) '+)))
 
 (define (addend s) (car s))
 
-(define (augend s) (caddr s))
+;(define (augend s) (caddr s))
+(define (augend s) (cleaner (cddr s)))
 
 (define (product? x) (and (pair? x) (eq? (cadr x) '*)))
 
 (define (multiplier p) (car p))
 
-(define (multiplicand p) (caddr p))
+;(define (multiplicand p) (caddr p))
+(define (multiplicand p) (cleaner (cddr p)))
 
 ;Derivation procedure
 (define (deriv exp var)
@@ -53,3 +61,4 @@
 (deriv '(x * y) 'x) ; Expected: y
 (deriv '((x * y) * (x + 3)) 'x) ; Expected: ((x * y) + (y * (x + 3)))
 (deriv '(x + (3 * (x + (y + 2)))) 'x) ; Expected: 4
+(deriv '(x + 3 * (x + y + 2)) 'x) ; Expected: 4
