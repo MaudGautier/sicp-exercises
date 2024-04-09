@@ -45,8 +45,15 @@
     ((and (number? a1) (number? a2)) (- a1 a2))
     (else (list '- a1 a2))))
 
+;(define (make-exponentiation a1 a2)
+;  (list '** a1 a2)
+;  )
 (define (make-exponentiation a1 a2)
-  (list '** a1 a2)
+  (cond ((=number? a2 0) 1)
+    ((=number? a2 1) a1)
+    ((and (number? a1) (number? a2))
+      (expt a1 a2))
+    (else (list '** a1 a2)))
   )
 
 
@@ -91,4 +98,5 @@
 (deriv '(* (* x y) (+ x 3)) 'x) ; Expected: (+ (* x y) (* y (+ x 3)))
 (deriv '(** u 3) 'x) ; Expected: 0
 (deriv '(** (* x y) 3) 'x) ; Expected: (* 3 (** (* x y) 2) y)
+(deriv '(** (* x y) 1) 'x) ; Expected: (* 1 (** (* x y) 0) y) ---> y
 
