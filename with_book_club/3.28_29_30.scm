@@ -172,9 +172,9 @@
 
 ;(TIMELINE (list))
 (define (after-delay delay procedure)
-  (display "delay=")
-  (display delay)
-  (newline)
+;  (display "delay=")
+;  (display delay)
+;  (newline)
   (procedure)
   )
 
@@ -224,8 +224,7 @@
 
 ; a-list: A1 A2 A3...
 (define (ripple-carry-adder a-list b-list s-list c)
-  (define n (length a-list))
-  (define c-list (cons c (map (lambda item: (make-wire)) a-list)))
+  (define c-list (cons c (map (lambda (item) (make-wire)) a-list)))
   (define (iter a-list b-list s-list c-list)
     (cond ((null? a-list) 'ok)
       (else
@@ -234,5 +233,63 @@
         )
       )
     )
+  (iter a-list b-list s-list c-list)
   'ok
   )
+
+; Testing
+(define a-list (list (make-wire) (make-wire)))
+(set-signal! (car a-list) 1)
+(set-signal! (cadr a-list) 0)
+(define b-list (list (make-wire) (make-wire)))
+(set-signal! (car b-list) 1)
+(set-signal! (cadr b-list) 1)
+(define s-list (list (make-wire) (make-wire)))
+(define c (make-wire))
+(set-signal! c 0)
+(ripple-carry-adder a-list b-list s-list c)
+;Expected: s-list:
+; a: 1 0
+; b: 1 1
+; s: 0 1 + 1 carry
+(get-signal c) ; 1
+(map get-signal s-list) ; 0 1
+
+
+;General way to put wires together and then test different values
+(define (set-test-values a-bits b-bits)
+  ;Initialize circuit
+  (define a-wires (map (lambda (item) (make-wire)) a-bits))
+  (define b-wires (map (lambda (item) (make-wire)) a-bits))
+  (define s-wires (map (lambda (item) (make-wire)) a-bits))
+  (define c-wire (make-wire))
+  (ripple-carry-adder a-wires b-wires s-wires c-wire)
+
+  ;Set values
+    ;(set-signal! wire value)
+    ;zip: (list (wire-1 value-1) ... (wire-n value-n))
+  (map set-signal! a-wires a-bits)
+  (map set-signal! b-wires b-bits)
+
+  ;Get output
+  (define c-output (get-signal c-wire))
+  (define s-output (map get-signal s-wires))
+  ; Return as pair
+  (list c-output s-output)
+  )
+
+;Testing
+(define a-bits (list 0 1))
+(define b-bits (list 1 0))
+(set-test-values a-bits b-bits); Expected: (0 (1 1))
+
+(define a-bits (list 0 1 1))
+(define b-bits (list 1 0 1))
+(set-test-values a-bits b-bits); Expected: (1 (0 0 0))
+
+(define a-bits (list 0 0 0))
+(define b-bits (list 1 1 1))
+(set-test-values a-bits b-bits); Expected: (0 (1 1 1))
+
+;Next week: agenda
+
