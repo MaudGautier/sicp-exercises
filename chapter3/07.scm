@@ -43,8 +43,3 @@
 ((paul-acc 'paul-password 'withdraw) 60); Expected: 40
 ((paul-acc 'paul-password 'deposit) 100); Expected: 140
 ((peter-acc 'peter-password 'deposit) 10); Expected: 150
-
-; Extra:
-((paul-acc 'peter-password 'deposit) 100); Expected: 250
-
-
